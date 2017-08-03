@@ -14,8 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/chat/*")
-@ServerEndpoint(value="/echo")
+@ServerEndpoint(value="/chat")
 public class TestWebSocket {
 
     private static final java.util.Set<Session> sessions = java.util.Collections.synchronizedSet(new java.util.HashSet<Session>());
@@ -53,11 +52,7 @@ public class TestWebSocket {
         System.out.println("server onOpen!");
     }
     
-    /**
-     * 紐⑤뱺 �궗�슜�옄�뿉寃� 硫붿떆吏�瑜� �쟾�떖�븳�떎.
-     * @param self
-     * @param message
-     */
+   
     private void sendAllSessionToMessage(Session self, String message){
         try {
             for( Session session : TestWebSocket.sessions ){

@@ -4,15 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<%--
-	User vo=(User)session.getAttribute("user");
-
-	String role="";
-
-	if(vo != null) {
-		role=vo.getRole();
-	}
---%>
 
 
 <html>

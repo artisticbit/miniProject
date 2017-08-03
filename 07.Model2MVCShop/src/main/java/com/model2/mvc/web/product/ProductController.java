@@ -88,12 +88,17 @@ public class ProductController {
 			
 			if(historyCookie==null){
 				historyCookie = new Cookie("history", prodNo+"");
+		//		historyCookie.setPath("/");
 				System.out.println("!!Create Cookie!!");
 			}
 			else{
 				historyCookie.setValue(historyCookie.getValue()+","+prodNo);
-				System.out.println("!!Append Cookie!!");
+				
+			//	historyCookie.setPath("/");
+				System.out.println("!!Append Cookie!!\n");
+	
 			}
+				
 				historyCookie.setMaxAge(60*60);
 				response.addCookie(historyCookie);
 			

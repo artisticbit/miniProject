@@ -91,9 +91,13 @@ public class PurchaseController {
 		public String updatePurchaseView(@RequestParam(value="tranNo")int tranNo,
 											Model model) throws Exception{
 			
+			System.out.println(tranNo);
 			Purchase purchase=purchaseService.getPurchase(tranNo);
+			
 			//쿼리에서 수정
+			if(purchase.getDivyDate()!=null) {//배송날짜 null일때 방지
 			purchase.setDivyDate(purchase.getDivyDate().split(" ")[0]);
+			}
 			//
 			model.addAttribute("purchase",purchase);
 			

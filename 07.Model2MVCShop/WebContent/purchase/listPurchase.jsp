@@ -72,7 +72,7 @@
 		<!-- 
 			<a href="/getUser.do?userId=${purchase.buyer.userId}">${purchase.buyer.userId}</a>
 		 -->
-			<a href="/purchase/getProduct?prodNo=${purchase.purchaseProd.prodNo}">${purchase.purchaseProd.prodName}</a> 
+			<a href="/product/getProduct?prodNo=${purchase.purchaseProd.prodNo}">${purchase.purchaseProd.prodName}</a> 
 		</td>
 		<td></td>
 		<td align="left">${purchase.buyer.userName}</td>
