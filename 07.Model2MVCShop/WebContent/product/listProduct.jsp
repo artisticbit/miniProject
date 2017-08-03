@@ -39,7 +39,7 @@ function fncSerchPrice(searchCondition){
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/listProduct.do?" method="post">
+<form name="detailForm" action="/product/listProduct?" method="post">
 <input name="menu" value="${ param.menu }" type="hidden"/>
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -145,7 +145,7 @@ function fncSerchPrice(searchCondition){
 				<c:if test="${empty user|| user.role == 'user' }">
 					<c:choose>
 						<c:when test="${empty prod.proTranCode }">					
-				<td align="left"><a href="/getProduct.do?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>
+				<td align="left"><a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>
 						</c:when>
 						<c:otherwise>
 				<td align="left">${ prod.prodName }</td>
@@ -154,7 +154,7 @@ function fncSerchPrice(searchCondition){
 				</c:if> 
 				
 				<c:if test="${ user.role=='admin' }">				
-				<td align="left"><a href="/getProduct.do?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>	
+				<td align="left"><a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>	
 				</c:if>
 				<!-- =================상품명 ====================-->
 		<td></td>
@@ -195,7 +195,7 @@ function fncSerchPrice(searchCondition){
 				</c:if>
 				<c:if test="${ prod.proTranCode=='1' }">
 				배송중 
-				<a href="/updateTranCodeByProd.do?prodNo=${ prod.prodNo }&tranCode=2">배송</a>
+				<a href="/purchase/updateTranCodeByProd?prodNo=${ prod.prodNo }&tranCode=2">배송</a>
 				</c:if>
 				<c:if test="${ prod.proTranCode=='2' }">
 				배송완료

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/chat/*")
 @ServerEndpoint(value="/echo")
 public class TestWebSocket {
 
@@ -23,7 +24,7 @@ public class TestWebSocket {
     public TestWebSocket() {
 		System.out.println(getClass());
 	}
-    @RequestMapping("/webSocket.do")
+    @RequestMapping("/webSocket")
     public String testView(){
     	System.out.println("socketTest");
       //  return "common/testWebSocket";
@@ -53,7 +54,7 @@ public class TestWebSocket {
     }
     
     /**
-     * 모든 사용자에게 메시지를 전달한다.
+     * 紐⑤뱺 �궗�슜�옄�뿉寃� 硫붿떆吏�瑜� �쟾�떖�븳�떎.
      * @param self
      * @param message
      */

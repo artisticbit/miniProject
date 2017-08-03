@@ -109,10 +109,11 @@ public class PurchaseController {
 		}
 		
 		@RequestMapping("/updateTranCode.do")
-		public String updateTranCode(@RequestParam(value="prodNo")int prodNo,
+		public String updateTranCode(@RequestParam(value="tranNo")int tranNo,
 									@RequestParam(value="tranCode")String tranCode) throws Exception{
 			
-			Purchase purchase=purchaseService.getPurchaseByProdNo(prodNo);
+			Purchase purchase=new Purchase();
+			purchase.setTranNo(tranNo);
 			purchase.setTranCode(tranCode);
 			
 			purchaseService.updateTranCode(purchase);
@@ -121,11 +122,11 @@ public class PurchaseController {
 		}
 		
 		@RequestMapping("/updateTranCodeByProd.do")
-		public String updateTranCodeByProd(@RequestParam(value="tranNo")int tranNo,
+		public String updateTranCodeByProd(@RequestParam(value="prodNo")int prodNo,
 									 @RequestParam(value="tranCode")String tranCode) throws Exception{
 			
-			Purchase purchase=new Purchase();
-			purchase.setTranNo(tranNo);
+			Purchase purchase=purchaseService.getPurchaseByProdNo(prodNo);
+			
 			purchase.setTranCode(tranCode);
 			
 			purchaseService.updateTranCode(purchase);

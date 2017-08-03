@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +24,7 @@ import com.model2.mvc.service.product.ProductService;
 
 
 @Controller
+@RequestMapping("/product/*")
 public class ProductController {
 
 	@Autowired
@@ -40,7 +42,7 @@ public class ProductController {
 		System.out.println(getClass());
 	}
 	
-	@RequestMapping("/addProduct.do")
+	@RequestMapping(value="/addProduct", method=RequestMethod.POST)
 	public ModelAndView addProduct(@ModelAttribute("product")Product product) throws Exception{
 		
 		product.setManuDate(product.getManuDate().replace("-", ""));
@@ -53,7 +55,7 @@ public class ProductController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/getProduct.do")
+	@RequestMapping(value="/getProduct", method=RequestMethod.GET)
 	public ModelAndView getProduct(@RequestParam("prodNo")int prodNo,
 									@RequestParam(value="menu",defaultValue="search")String menu,
 									HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -70,7 +72,7 @@ public class ProductController {
 			modelAndView.setViewName("forward:/product/getProduct.jsp");			
 		}
 		else if(menu.equals("manage")){
-			modelAndView.setViewName("/updateProductView.do");
+			modelAndView.setViewName("/product/updateProduct");
 		}
 		
 		//////ÄíÅ°Ãß°¡////
@@ -101,7 +103,7 @@ public class ProductController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/updateProductView.do")
+	@RequestMapping(value="/updateProduct", method=RequestMethod.GET)
 	public ModelAndView updateProductView() {
 		
 		ModelAndView modelAndView =new ModelAndView();
@@ -109,7 +111,7 @@ public class ProductController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/updateProduct.do")
+	@RequestMapping(value="/updateProduct", method=RequestMethod.POST)
 	public ModelAndView updateProduct(@ModelAttribute("product")Product product) throws Exception{
 		
 		product.setManuDate(product.getManuDate().replace("-", ""));
@@ -117,11 +119,12 @@ public class ProductController {
 		
 		ModelAndView modelAndView =new ModelAndView();
 
-		modelAndView.setViewName("forward:/getProduct.do?+prodNo="+product.getProdNo()+"&menu=search");
+		modelAndView.setViewName("redirect:/product/getProduct?prodNo="+product.getProdNo()+"&menu=search");
+		System.out.println("updatea Complete!!!!!!!!!!!\n"+modelAndView.getViewName());
 		return modelAndView;
 	}
 	
-	@RequestMapping("/listProduct.do")
+	@RequestMapping(value="/listProduct")
 	public ModelAndView listProduct(@ModelAttribute("search")Search search) throws Exception{
 		
 		if(search.getCurrentPage()==0) {

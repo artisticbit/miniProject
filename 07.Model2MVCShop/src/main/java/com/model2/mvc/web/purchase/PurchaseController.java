@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +25,7 @@ import com.model2.mvc.service.purchase.PurchaseService;
 import com.model2.mvc.service.user.UserService;
 
 @Controller
+@RequestMapping("/purchase/*")
 public class PurchaseController {
 
 		@Autowired
@@ -48,7 +50,7 @@ public class PurchaseController {
 			System.out.println(getClass());
 		}
 		
-		@RequestMapping("/addPurchase.do")
+		@RequestMapping(value="/addPurchase", method=RequestMethod.POST)
 		public String addPurchase(@ModelAttribute("purchase")Purchase purchase
 //									,@RequestParam("prodNo")int prodNo,
 //									@RequestParam("buyerId")String buyerId
@@ -61,10 +63,10 @@ public class PurchaseController {
 			purchaseService.addPurchase(purchase);
 			
 			
-			return "/getPurchase.do?tranNo="+purchase.getTranNo();
+			return "redirect:/purchase/getPurchase?tranNo="+purchase.getTranNo();
 		}
 		
-		@RequestMapping("/addPurchaseView.do")
+		@RequestMapping(value="/addPurchase", method=RequestMethod.GET)
 		public String addPurchaseView(@RequestParam("prod_no")int prodNo,
 										Model model) throws Exception{
 			
@@ -75,7 +77,7 @@ public class PurchaseController {
 			return "forward:/purchase/addPurchaseView.jsp";
 		}
 		
-		@RequestMapping("/getPurchase.do")
+		@RequestMapping(value="/getPurchase", method=RequestMethod.GET)
 		public String getPurchase(@RequestParam(value="tranNo")int tranNo,Model model) throws Exception{
 			
 			Purchase purchase=purchaseService.getPurchase(tranNo);
@@ -85,7 +87,7 @@ public class PurchaseController {
 			return "forward:/purchase/getPurchase.jsp";
 		}
 		
-		@RequestMapping("/updatePurchaseView.do")
+		@RequestMapping(value="/updatePurchase" ,method=RequestMethod.GET)
 		public String updatePurchaseView(@RequestParam(value="tranNo")int tranNo,
 											Model model) throws Exception{
 			
@@ -98,31 +100,19 @@ public class PurchaseController {
 			return "forward:/purchase/updatePurchaseView.jsp";
 		}
 		
-		@RequestMapping("/updatePurchase.do")
+		@RequestMapping(value="/updatePurchase", method=RequestMethod.POST)
 		public String updatePurchase(@ModelAttribute("purchase")Purchase purchase) throws Exception{
 			
 			purchaseService.updatePurchase(purchase);
 			
 			
 			//return "forward:/getPurchase.do?tranNo="+purchase.getTranNo();
-			return "forward:/getPurchase.do";
+			return "redirect:/purchase/getPurchase?tranNo="+purchase.getTranNo();
 		}
 		
-		@RequestMapping("/updateTranCode.do")
-		public String updateTranCode(@RequestParam(value="prodNo")int prodNo,
+		@RequestMapping(value="/updateTranCode",method=RequestMethod.GET)
+		public String updateTranCode(@RequestParam(value="tranNo")int tranNo,
 									@RequestParam(value="tranCode")String tranCode) throws Exception{
-			
-			Purchase purchase=purchaseService.getPurchaseByProdNo(prodNo);
-			purchase.setTranCode(tranCode);
-			
-			purchaseService.updateTranCode(purchase);
-			
-			return "forward:/listPurchase.do";
-		}
-		
-		@RequestMapping("/updateTranCodeByProd.do")
-		public String updateTranCodeByProd(@RequestParam(value="tranNo")int tranNo,
-									 @RequestParam(value="tranCode")String tranCode) throws Exception{
 			
 			Purchase purchase=new Purchase();
 			purchase.setTranNo(tranNo);
@@ -130,10 +120,22 @@ public class PurchaseController {
 			
 			purchaseService.updateTranCode(purchase);
 			
-			return "forward:/listSale.do";
+			return "forward:/purchase/listPurchase";
 		}
 		
-		@RequestMapping("/listPurchase.do")
+		@RequestMapping(value="/updateTranCodeByProd",method=RequestMethod.GET)
+		public String updateTranCodeByProd(@RequestParam(value="prodNo")int prodNo,
+									 @RequestParam(value="tranCode")String tranCode) throws Exception{
+			
+			Purchase purchase=purchaseService.getPurchaseByProdNo(prodNo);
+			purchase.setTranCode(tranCode);
+			
+			purchaseService.updateTranCode(purchase);
+			
+			return "forward:/purchase/listSale";
+		}
+		
+		@RequestMapping(value="/listPurchase")
 		public String listPurchase(@ModelAttribute("search")Search search,
 								HttpSession session,Model model) throws Exception{
 			String userId=((User)session.getAttribute("user")).getUserId();
@@ -157,7 +159,7 @@ public class PurchaseController {
 			return "forward:/purchase/listPurchase.jsp";
 		}
 		
-		@RequestMapping("/listSale.do")
+		@RequestMapping(value="/listSale")
 		public String listSale(@ModelAttribute("search")Search search,
 								Model model) throws Exception{
 			

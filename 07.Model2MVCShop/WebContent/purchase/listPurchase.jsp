@@ -22,7 +22,7 @@
 <div style="width: 98%; margin-left: 10px;">
 
 
-<form name="detailForm" action="/listPurchase.do" method="post">
+<form name="detailForm" action="/purchase/listPurchase" method="post">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -65,14 +65,14 @@
 	<c:set var="no" value="${ no+1 }"/>
 	<tr class="ct_list_pop">
 		<td align="center">
-			<a href="/getPurchase.do?tranNo=${purchase.tranNo}">${ no }</a>
+			<a href="/purchase/getPurchase?tranNo=${purchase.tranNo}">${ no }</a>
 		</td>
 		<td></td>
 		<td align="left">
 		<!-- 
 			<a href="/getUser.do?userId=${purchase.buyer.userId}">${purchase.buyer.userId}</a>
 		 -->
-			<a href="/getProduct.do?prodNo=${purchase.purchaseProd.prodNo}">${purchase.purchaseProd.prodName}</a> 
+			<a href="/purchase/getProduct?prodNo=${purchase.purchaseProd.prodNo}">${purchase.purchaseProd.prodName}</a> 
 		</td>
 		<td></td>
 		<td align="left">${purchase.buyer.userName}</td>
@@ -96,7 +96,7 @@
 		<td align="left">
 	
 			<c:if test="${purchase.tranCode=='1' ||purchase.tranCode=='2' }">
-			<a href="/updateTranCode.do?tranNo=${ purchase.tranNo }&tranCode=3">¹°°ÇµµÂø</a>
+			<a href="/purchase/updateTranCode?tranNo=${ purchase.tranNo }&tranCode=3">¹°°ÇµµÂø</a>
 			</c:if>
 		
 			</td>
