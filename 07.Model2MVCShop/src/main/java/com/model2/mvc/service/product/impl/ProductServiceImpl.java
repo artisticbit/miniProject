@@ -36,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 	public int addProduct(Product product) throws Exception {
 			//int test=productDao.addProduct(product);
 			//throw new SQLException();
+			product.setManuDate(product.getManuDate().replace("-", ""));
 		return productDao.addProduct(product);
 	}
 

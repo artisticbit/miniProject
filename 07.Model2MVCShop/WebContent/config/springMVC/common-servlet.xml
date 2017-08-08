@@ -37,6 +37,7 @@
 	          <mvc:annotation-driven /> 사용으로 interceptor 를 직접
 	          DefaultAnnotationHandlerMapping 에 주입 할 수 없으니 
 	       	  아래의 설정방법으로 interceptor 주입-->
+  <!--		인터셉트 일시차닽 
    	<mvc:interceptors>
 		
    		<mvc:interceptor>
@@ -45,6 +46,8 @@
    		</mvc:interceptor>
 
    	</mvc:interceptors>
+	
+   -->
 	<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	
 	 
@@ -64,6 +67,13 @@
     <bean id="viewResolver"
 				class="org.springframework.web.servlet.view.InternalResourceViewResolver" />
 	
+	<!--  multipart  -->
+	<bean id="multipartResolver" 
+	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<property name="maxUploadSize" value="1000000"/>
+	<property name="maxInMemorySize" value="1000"/>
+	<property name="defaultEncoding" value="euc_kr"/>
+	</bean>
 	
 	<!-- ////////////////////////////////////////// 추가 ,  변경된 부분 ////////////////////////////////////////////////// -->
 	<!--	

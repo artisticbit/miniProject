@@ -102,6 +102,38 @@ function resetData() {
 	document.detailForm.reset();
 }
 
+function jsonTest(userId){
+	
+	
+	//alert(userId.value);
+	var varUserId=userId.value;
+	if(varUserId==''){
+		return true;
+	}
+	//var jsonObj=JSON.parse(GET("http://127.0.0.1:8080/user/json/checkDuplication/varUserId"));
+	//alert(jsonObj);
+
+	  var Httpreq = new XMLHttpRequest(); // a new request
+	    Httpreq.open("GET","http://127.0.0.1:8080/user/json/checkDuplication/"+varUserId,false);
+	    Httpreq.send(null);
+		var flag=(Httpreq.responseText=='true');	   
+	  //  alert(Httpreq.responseText);
+	    
+		var dupl=document.getElementById("dupl");
+		if(flag){
+		//alert('가입가능');   
+		dupl.style.color="#000000";
+		dupl.innerHTML='가입 가능한 아이디 입니다.';
+	    }
+	    else{
+	    //	alert('가입불가능');
+	    	dupl.style.color="#ff0000";
+	    	dupl.innerHTML='가입 불가능한 아이디 입니다.';
+	    }
+	    
+	    	
+}
+
 </script>
 </head>
 
@@ -143,8 +175,12 @@ function resetData() {
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="105">
+					<!-- 
+					<input 	type="text" name="userId" class="ct_input_bg" 
+										style="width:100px; height:19px"  maxLength="20">
+					 -->
 						<input 	type="text" name="userId" class="ct_input_bg" 
-										style="width:100px; height:19px"  maxLength="20" >
+										style="width:100px; height:19px"  maxLength="20" onkeyup="jsonTest(this)">
 					</td>
 					<td>
 						<table border="0" cellspacing="0" cellpadding="0">
@@ -158,6 +194,11 @@ function resetData() {
 								<td width="4" height="21">
 									<img src="/images/ct_btng03.gif" width="4" height="21"/>
 								</td>
+								<!-- 아이디 중복 확인 추가  -->
+								<td>
+									<span id="dupl"></span>			
+								</td>
+								<!--  -->
 							</tr>
 						</table>
 					</td>

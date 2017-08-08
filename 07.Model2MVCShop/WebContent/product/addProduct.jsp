@@ -5,13 +5,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<script type="text/javascript">
+
+	function funcTest(){
+	
+		setTimeout(function(){
+			alert('');
+			var image=document.getElementById('image');
+			image.src=image.src;
+		}, 2000);
+	}
+	
+
+</script>
+
 <title>상품등록</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
 </head>
-
-<body bgcolor="#ffffff" text="#000000">
+<body bgcolor="#ffffff" text="#000000" onload="javascript:funcTest()">
 
 <table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -94,7 +107,7 @@
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="26">
-						<img src="${product.fileName}"/>
+						<img src="/images/uploadFiles/${product.fileName}" id="image"/>
 					</td>
 				</tr>
 			</table>
