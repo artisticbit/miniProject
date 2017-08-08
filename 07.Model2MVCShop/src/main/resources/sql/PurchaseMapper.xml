@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	
+ 					
+<mapper namespace="PurchaseMapper">
+
+	<resultMap id="purchaseSelectMap" type="com.model2.mvc.service.domain.Purchase">
+		<result property="tranNo" column="tran_no" jdbcType="NUMERIC" />
+		<result property="paymentOption" column="payment_option" jdbcType="VARCHAR" />
+		<result property="receiverName" column="receiver_name" jdbcType="VARCHAR" />
+		<result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR" />
+		<result property="divyAddr" column="demailaddr" jdbcType="VARCHAR" />
+		<result property="divyRequest" column="dlvy_request" jdbcType="VARCHAR" />
+		<result property="tranCode" column="tran_status_code" jdbcType="VARCHAR" />
+		<result property="orderDate" column="order_data" jdbcType="DATE" />
+		<result property="divyDate" column="dlvy_date" jdbcType="DATE" />
+		<association property="buyer" resultMap="UserMapper.userSelectMap"/>
+		<association property="purchaseProd" resultMap="ProductMapper.productSelectMap"/> 
+	</resultMap>
+	<!-- 
+	<resultMap  id="productSelectMap" type="com.model2.mvc.service.domain.Product">
+		<result property="prodNo" column="prod_no" jdbcType="NUMERIC"/>
+		<result property="prodName" column="prod_name" jdbcType="VARCHAR"/>
+		<result property="prodDetail" column="prod_detail" jdbcType="VARCHAR" />
+		<result property="manuDate" column="manufacture_day" jdbcType="VARCHAR" />
+		<result property="price" column="price" jdbcType="NUMERIC" />
+		<result property="fileName" column="image_file" jdbcType="VARCHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="proTranCode" column="tran_status_code" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="userSelectMap" type="com.model2.mvc.service.domain.User">
+		<result property="userId" 			column="user_id" 			jdbcType="VARCHAR"/>
+		<result property="userName"	column="user_name" 		jdbcType="VARCHAR" />
+		<result property="password" 	column="password" 		jdbcType="VARCHAR" />
+		<result property="role" 				column="role" 					jdbcType="VARCHAR" />
+		<result property="ssn" 				column="ssn" 					jdbcType="VARCHAR" />
+		<result property="phone" 			column="cell_phone" 		jdbcType="VARCHAR" />
+		<result property="addr" 				column="addr" 					jdbcType="VARCHAR" />
+		<result property="email" 			column="email" 				jdbcType="NUMERIC"  />
+		<result property="regDate" 		column="reg_date" 			jdbcType="DATE" />
+	</resultMap>
+	 -->
+	 <insert id="addPurchase" parameterType="com.model2.mvc.service.domain.Purchase" keyProperty="tranNo"
+	 			keyColumn="tran_no"  useGeneratedKeys="true">
+	 INSERT INTO transaction(tran_no, payment_option, 
+	 						receiver_name, receiver_phone, 
+	 						demailaddr, dlvy_request,
+	  						tran_status_code, order_data, 
+	  						dlvy_date , 
+	  						buyer_id, prod_no)
+	  		VALUES(seq_transaction_tran_no.nextval, #{paymentOption:VARCHAR}, 
+	  				#{receiverName:VARCHAR}, #{receiverPhone:VARCHAR}, 
+	  				#{divyAddr:VARCHAR}, #{divyRequest:VARCHAR},
+	  				#{tranCode}, SYSDATE, 
+	  				#{divyDate:DATE},
+	  				#{buyer.userId:VARCHAR},#{purchaseProd.prodNo:NUMERIC})
+	 </insert>
+	 
+	<select id="getPurchase" parameterType="_int" resultMap="purchaseSelectMap">
+		SELECT
+		t.* , u.*, p.*	
+		FROM transaction t, users u, product p
+		WHERE t.buyer_id = u.user_id AND t.prod_no = p.prod_no
+				AND tran_no = #{value}
+	</select>
+	
+	<select id="getPurchaseByProdNo" parameterType="_int" resultMap="purchaseSelectMap">
+		SELECT
+		t.* , u.*, p.*	
+		FROM transaction t, users u, product p
+		WHERE t.buyer_id = u.user_id AND t.prod_no = p.prod_no
+				AND t.prod_no = #{value}
+	</select>
+	
+	<update id="updatePurchase" parameterType="com.model2.mvc.service.domain.Purchase">
+		UPDATE transaction
+		SET 
+			payment_option=#{paymentOption:VARCHAR}, 
+	 		receiver_name=#{receiverName:VARCHAR}, 
+	 		receiver_phone=#{receiverPhone:VARCHAR}, 
+	 		demailaddr=#{divyAddr:VARCHAR}, 
+	 		dlvy_request=#{divyRequest:VARCHAR},
+	  		 dlvy_date= #{divyDate:VARCHAR}
+		WHERE
+			tran_no=#{tranNo}
+	</update>
+	
+	<update id="updateTranCode" parameterType="com.model2.mvc.service.domain.Purchase">
+		UPDATE	transaction
+		SET tran_status_code = #{tranCode}
+		WHERE tran_no = #{tranNo}
+	</update>
+	
+	<select id="getPurchaseList" parameterType="map" resultMap="purchaseSelectMap">
+		SELECT 
+			*
+		FROM (
+				SELECT 
+					rownum seq_rownum, innertable.*
+				FROM (
+						SELECT
+							t.*, u.*, prod_name, prod_detail, manufacture_day, price, image_file
+						FROM transaction t, users u, product p
+						WHERE t.buyer_id = u.user_id AND t.prod_no = p.prod_no
+							<if test="userId!=null">
+								AND t.buyer_id = #{userId}
+							</if>
+								<if test="search.searchCondition==0">
+  									
+						  		</if>
+						  		<if test="search.searchCondition==1">
+						  			AND prod_name LIKE '%${search.searchKeyword}%'
+						  		</if>
+						  		<if test="search.searchCondition==2">
+						  			AND t.tran_status_code LIKE'%${search.searchKeyword}%'
+						  		</if>
+						ORDER BY t.tran_no 
+						) innertable
+						WHERE rownum &lt;=#{search.endRowNum}
+				)
+		WHERE  seq_rownum between #{search.startRowNum} and #{search.endRowNum}
+	</select>
+	
+	<select id="getTotalCount" parameterType="map" resultType="_int">
+  		SELECT COUNT(*) 
+  		FROM transaction t, product p, users u
+  		WHERE
+  			 t.buyer_id = u.user_id AND t.prod_no = p.prod_no
+  			<if test="userId!=null">
+  			 AND buyer_id = #{userId}
+  			</if>
+	  		<if test="search.searchCondition==0">
+	  
+	  		</if>
+	  		<if test="search.searchCondition==1">
+	  			AND p.prod_name LIKE '%${search.searchKeyword}%'
+	  		</if>
+	  		<if test="search.searchCondition==2">
+	  			AND t.tran_status_code='%${search.searchKeyword}%'
+	  		</if>
+  		
+  		
+  	</select>
+</mapper>
+
+	
