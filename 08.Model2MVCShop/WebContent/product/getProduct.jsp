@@ -125,7 +125,7 @@
 			<tr>
 				<!--  구매버튼  시작-->
 			<c:if test="${ !empty user && user.role=='user' }">	
-				<c:if test="${!empty product.proTranCode}">
+				<c:if test="${empty product.proTranCode}">
 				<td width="17" height="23">
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>

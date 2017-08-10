@@ -166,16 +166,17 @@ public class ProductController {
 	@RequestMapping(value="/addProduct", method=RequestMethod.POST)
 	public ModelAndView addProduct(@RequestParam("file")MultipartFile file,@ModelAttribute("product")Product product
 									,HttpSession session) throws Exception{
-		
-		String str=session.getServletContext().getRealPath("/images/uploadFiles");
-		String temDir="D:\\Projects\\Git\\bitcamp\\miniProject\\07.Model2MVCShop\\WebContent\\images\\uploadFiles";	
-		
-		String url=str+"\\"+file.getOriginalFilename();
-		File toFile=new File(url);
-		file.transferTo(toFile);
-	//	System.out.println(url);
-		
-		product.setFileName(file.getOriginalFilename());
+		if(!file.isEmpty()) {
+			String str=session.getServletContext().getRealPath("/images/uploadFiles");
+			String temDir="D:\\Projects\\Git\\bitcamp\\miniProject\\07.Model2MVCShop\\WebContent\\images\\uploadFiles";	
+			
+			String url=str+"\\"+file.getOriginalFilename();
+			File toFile=new File(url);
+			file.transferTo(toFile);
+		//	System.out.println(url);
+			
+			product.setFileName(file.getOriginalFilename());
+		}
 		productService.addProduct(product);
 		
 		
@@ -240,6 +241,7 @@ public class ProductController {
 		return modelAndView;
 	}
 	
+	
 	@RequestMapping(value="/updateProduct", method=RequestMethod.GET)
 	public ModelAndView updateProductView() {
 		
@@ -249,6 +251,32 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/updateProduct", method=RequestMethod.POST)
+	public ModelAndView updateProduct(@RequestParam("file")MultipartFile file,@ModelAttribute("product")Product product
+									,HttpSession session) throws Exception{
+		
+		if(!file.isEmpty()) {
+			String str=session.getServletContext().getRealPath("/images/uploadFiles");
+			String temDir="D:\\Projects\\Git\\bitcamp\\miniProject\\07.Model2MVCShop\\WebContent\\images\\uploadFiles";	
+			
+			String url=str+"\\"+file.getOriginalFilename();
+			File toFile=new File(url);
+			file.transferTo(toFile);
+		//	System.out.println(url);
+			
+			product.setFileName(file.getOriginalFilename());
+		}
+		productService.addProduct(product);
+		
+		
+		ModelAndView modelAndView=new ModelAndView();
+		//modelAndView.addObject("product",product);
+		modelAndView.setViewName("redirect:/product/getProduct?prodNo="+product.getProdNo()+"&menu=search");
+		
+		return modelAndView;
+	}
+	
+/*	
+ * @RequestMapping(value="/updateProduct", method=RequestMethod.POST)
 	public ModelAndView updateProduct(@ModelAttribute("product")Product product) throws Exception{
 		
 		product.setManuDate(product.getManuDate().replace("-", ""));
@@ -260,6 +288,7 @@ public class ProductController {
 		System.out.println("updatea Complete!!!!!!!!!!!\n"+modelAndView.getViewName());
 		return modelAndView;
 	}
+	*/
 	
 	@RequestMapping(value="/listProduct")
 	public ModelAndView listProduct(@ModelAttribute("search")Search search) throws Exception{
