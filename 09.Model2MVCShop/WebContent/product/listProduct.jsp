@@ -13,33 +13,95 @@
 <title>상품 관리</title>
 </c:if>
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+	
+		function fncGetProductList(currentPage){
+			document.getElementById("currentPage").value = currentPage;
+			document.detailForm.submit();
+		}
+		
+	
+		 $(function() {
+			 $( "td.ct_btn01:contains('검색')" ).on("click" , function() {
+		
+			 $("#currentPage").val("1");
+			 $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
+			 
+			//	fncGetUserList(1);
+			});
+			
+			 ///////링크숨기기//////////
+			 $(".hidden_link").css("display","none");
+			// $(".hidden_link").css("visibility","hidden");
+		
+			/////상품명 이벤트////////////
+			$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
+					
+				//alert($('span',$(this)).text());		
+				
+				var url=$('span',$(this)).text();
+				if(url!=''){
+					self.location = url;					
+				}
+				// console.log('${param.menu}');
+			});
+			//////////////////////////////
+			/////////배송 이벤트//////////////////////
+			$( ".ct_list_pop td:nth-child(9)" ).on("click" , function() {
+					//self.location ="/user/getUser?userId="+$(this).text().trim();
+				alert($('span',$(this)).text());		
+				
+				var url=$('span',$(this)).text();
+				self.location = url;
+				// console.log('${param.menu}');
+			});
+			/////////////////////////////////////////////////////
+			
+			//$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red");
+			var arrayProdName=$( ".ct_list_pop td:nth-child(3)" );
+			arrayProdName.each(function(index,elem){
+				//alert($('span' ,$(elem)).text());
+				var text=$('span' ,$(elem)).text();
+				if(text!=''){
+					$(this).css("color" , "red");
+				}
+				//alert($(elem).text());
+			});
+			
+			var test=$('');
+			
+			//$("h7").css("color" , "red");
+			
+						
+			$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+			
+			
+			console.log ( $(".ct_list_pop:nth-child(4)" ).html() );
+		
+		});	
+		 
 
-<script type="text/javascript">
-
-function fncGetProductList(currentPage){
-	document.getElementById("currentPage").value = currentPage;
-	document.detailForm.submit();
-}
-function fncSerchPrice(searchCondition){
-	var value=searchCondition.value;
-	//alert(value);
-	if(value=='2'){
-	var con2=document.getElementById("con2");
-	con2.innerHTML="~ <input type='text' name='searchKeyword2' size='3' class='ct_input_g' style='width:200px; height:19px' value='${!empty search.searchKeyword2 ? search.searchKeyword2: ''}'/> "
-	}
-	else{
-		var con2=document.getElementById("con2");
-		con2.innerHTML="";
-	}
-}
-</script>
+		function fncSerchPrice(searchCondition){
+			var value=searchCondition.value;
+			//alert(value);
+			if(value=='2'){
+				var con2=document.getElementById("con2");
+				con2.innerHTML="~ <input type='text' name='searchKeyword2' size='3' class='ct_input_g' style='width:200px; height:19px' value='${!empty search.searchKeyword2 ? search.searchKeyword2: ''}'/> "
+			}
+			else{
+				var con2=document.getElementById("con2");
+				con2.innerHTML="";
+			}
+		};
+	</script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/product/listProduct?" method="post">
+<form name="detailForm">
 <input name="menu" value="${ param.menu }" type="hidden"/>
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -95,7 +157,10 @@ function fncSerchPrice(searchCondition){
 						<img src="/images/ct_btnbg01.gif" width="17" height="23">
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+						<!-- 
 						<a href="javascript:fncGetProductList('1');">검색</a>
+						 -->
+						 검색
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -145,7 +210,14 @@ function fncSerchPrice(searchCondition){
 				<c:if test="${empty user|| user.role == 'user' }">
 					<c:choose>
 						<c:when test="${empty prod.proTranCode }">					
-				<td align="left"><a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>
+				<td align="left">
+				<!-- 
+				<a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a>
+				 -->
+				 <span class="hidden_link" >/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}</span>
+				 
+				 ${ prod.prodName }
+				</td>
 						</c:when>
 						<c:otherwise>
 				<td align="left">${ prod.prodName }</td>
@@ -154,7 +226,13 @@ function fncSerchPrice(searchCondition){
 				</c:if> 
 				
 				<c:if test="${ user.role=='admin' }">				
-				<td align="left"><a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a></td>	
+				<td align="left">
+				<!-- 
+				<a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a>
+				 -->
+				 <span class="hidden_link" >/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}</span>
+				 ${ prod.prodName }
+				</td>	
 				</c:if>
 				<!-- =================상품명 ====================-->
 		<td></td>
@@ -194,8 +272,12 @@ function fncSerchPrice(searchCondition){
 				판매중
 				</c:if>
 				<c:if test="${ prod.proTranCode=='1' }">
-				배송중 
+				배송전 
+				<span class="hidden_link" >/purchase/updateTranCodeByProd?prodNo=${ prod.prodNo }&tranCode=2</span>
+				<!-- 
 				<a href="/purchase/updateTranCodeByProd?prodNo=${ prod.prodNo }&tranCode=2">배송</a>
+				 -->
+				 배송
 				</c:if>
 				<c:if test="${ prod.proTranCode=='2' }">
 				배송완료

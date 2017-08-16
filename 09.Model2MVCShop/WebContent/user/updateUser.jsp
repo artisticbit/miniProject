@@ -7,52 +7,68 @@
 <title>회원 정보 수정</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
-<script type="text/javascript">
-
-function fncUpdateUser() {
-	// Form 유효성 검증
-	var name=document.detailForm.userName.value;
-	
-	if(name == null || name.length <1){
-		alert("이름은  반드시 입력하셔야 합니다.");
-		return;
-	}
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
 		
-	if(document.detailForm.phone2.value != "" && document.detailForm.phone2.value != "") {
-		document.detailForm.phone.value = document.detailForm.phone1.value + "-" + document.detailForm.phone2.value + "-" + document.detailForm.phone3.value;
-	} else {
-		document.detailForm.phone.value = "";
-	}
+		function fncUpdateUser() {
+
+			var name=$("input[name='userName']").val();
+			
+			if(name == null || name.length <1){
+				alert("이름은  반드시 입력하셔야 합니다.");
+				return;
+			}
+						
+			var value = "";	
+			if( $("input[name='phone2']").val() != ""  &&  $("input[name='phone3']").val() != "") {
+				var value = $("option:selected").val() + "-" 
+									+ $("input[name='phone2']").val() + "-" 
+									+ $("input[name='phone3']").val();
+			}
+			
+
+			$("input:hidden[name='phone']").val( value );
+				
+
+			$("form").attr("method" , "POST").attr("action" , "/user/updateUser").submit();
+		}
+		
+		$(function() {
 	
-	////////////////////////////////////////////////////////////////////////////////////	
-	//document.detailForm.action='/updateUser.do';
-	////////////////////////////////////////////////////////////////////////////////////
-	document.detailForm.action='/user/updateUser';
+			 $( "td.ct_btn01:contains('수정')" ).on("click" , function() {
+				fncUpdateUser();
+			});
+		});	
+		
 	
-	document.detailForm.submit();
-}
+		 $(function() {
+			 
+			 $("input[name='email']").on("change" , function() {
+					
+				 var email=$("input[name='email']").val();
+			    
+				 if(email != "" && (email.indexOf('@') < 1 || email.indexOf('.') == -1) ){
+			    	alert("이메일 형식이 아닙니다.");
+			     }
+			});
+			 
+		});	
+		
+		
 
-function check_email(frm) {
-	alert
-	var email=document.detailForm.email.value;
-    if(email != "" && (email.indexOf('@') < 1 || email.indexOf('.') == -1)){
-    	alert("이메일 형식이 아닙니다.");
-		return false;
-    }
-    return true;
-}
-
-function resetData() {
-	document.detailForm.reset();
-}
-
-</script>
+		 $(function() {
+	
+			 $( "td.ct_btn01:contains('취소')" ).on("click" , function() {
+				history.go(-1);
+			});
+		});
+	
+	</script>		
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm"  method="post" >
+<form name="detailForm" >
 
 <%--<input type="hidden" name="userId" value="<%=user.getUserId() %>"> --%>
 <input type="hidden" name="userId" value="${user.userId }">
@@ -175,7 +191,10 @@ function resetData() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+						<!-- 
 						<a href="javascript:fncUpdateUser();">수정</a>
+						 -->
+						 수정
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23" />
@@ -185,7 +204,10 @@ function resetData() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+						<!-- 
 						<a href="javascript:resetData();">취소</a>
+						 -->
+						 취소
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23" />

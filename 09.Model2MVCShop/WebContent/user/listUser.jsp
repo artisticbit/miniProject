@@ -7,16 +7,43 @@
 <title>회원 목록 조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
 
-<script type="text/javascript">
+		// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
+		function fncGetUserList(currentPage) {
+			document.getElementById("currentPage").value = currentPage;
+		   	document.detailForm.submit();		
+		}
 
-	// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
-	function fncGetUserList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-	   	document.detailForm.submit();		
-	}
-
-</script>
+		 $(function() {
+				 $( "td.ct_btn01:contains('검색')" ).on("click" , function() {
+			
+				 $("#currentPage").val("1");
+				 $("form").attr("method" , "POST").attr("action" , "/user/listUser").submit();
+			
+				//	fncGetUserList(1);
+				});
+				
+			
+				$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
+						self.location ="/user/getUser?userId="+$(this).text().trim();
+				});
+				
+				$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red");
+				$("h7").css("color" , "red");
+				
+							
+				$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+				console.log ( $(".ct_list_pop:nth-child(1)" ).html() );
+				//console.log ( $(".ct_list_pop:nth-child(2)" ).html() );
+				//console.log ( $(".ct_list_pop:nth-child(3)" ).html() );
+				//console.log ( $(".ct_list_pop:nth-child(4)" ).html() ); //==> ok
+				//console.log ( $(".ct_list_pop:nth-child(5)" ).html() ); 
+				//console.log ( $(".ct_list_pop:nth-child(6)" ).html() ); //==> ok
+				//console.log ( $(".ct_list_pop:nth-child(7)" ).html() ); 
+			});	
+	</script>
 
 </head>
 
@@ -27,7 +54,7 @@
 <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 <form name="detailForm" action="/listUser.do" method="post">
 ////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<form name="detailForm" action="/user/listUser" method="post">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -55,7 +82,7 @@
 				<option value="1"  ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" }>회원명</option>
 			</select>
 			<input type="text" name="searchKeyword" 
-						value="${! empty search.searchKeyword ? search.searchKeyword : ""}"  
+						value="${! empty search.searchKeyword ? search.searchKeyword : ''}"  
 						class="ct_input_g" style="width:200px; height:20px" > 
 		</td>
 		<td align="right" width="70">
@@ -63,7 +90,10 @@
 				<tr>
 					<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23"></td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+						<!-- 
 						<a href="javascript:fncGetUserList('1');">검색</a>
+						 -->
+						 검색
 					</td>
 					<td width="14" height="23"><img src="/images/ct_btnbg03.gif" width="14" height="23"></td>
 				</tr>
@@ -101,7 +131,10 @@
 				<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				<a href="/getUser.do?userId=${user.userId}">${user.userId}</a></td>
                	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+		<!-- 
 			<a href="/user/getUser?userId=${user.userId}">${user.userId}</a></td>
+		 -->		
+		 		${user.userId}
 			<td></td>
 			<td align="left">${user.userName}</td>
 			<td></td>

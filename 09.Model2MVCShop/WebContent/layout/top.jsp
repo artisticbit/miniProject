@@ -1,15 +1,30 @@
 <%@page import="com.model2.mvc.service.domain.User"%>
 <%@ page contentType="text/html; charset=euc-kr" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-	User vo=(User)session.getAttribute("user");
-%>
 
 <html>
 <head>
 <title>Model2 MVC Shop</title>
 
 <link href="/css/left.css" rel="stylesheet" type="text/css">
+
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+	
+		 $(function() {
+			 
+
+		 	$( "td[width='115']:contains('login')" ).on("click" , function() {
+				$(window.parent.frames["rightFrame"].document.location).attr("href","/user/login");
+			});
+			
+		 	$( "td[width='56']:contains('logout')" ).on("click" , function() {
+				$(window.parent.document.location).attr("href","/user/logout");
+			}); 
+		});	
+		 
+	</script>		
 
 </head>
 
@@ -25,23 +40,25 @@
 	    <table width="200" border="0" cellspacing="0" cellpadding="0">
 	        <tr> 
 	          <td width="115">
-	          <%
-	          	if(vo == null) {
-	          %>
+	         
+	          <c:if test="${empty user}">
+	              <!-- 
 	              <a href="/user/loginView.jsp" target="rightFrame">login</a>   
-	          <%
-	          	}
-	          %>        
+	               -->
+	               login
+	          </c:if>
+	                 
 	          </td>
 	          <td width="14">&nbsp;</td>
 	          <td width="56">
-	          <%
-	          	if(vo != null) {
-	          %>
+	         
+	          <c:if test="${!empty user}">
+	          <!--  
 	            <a href="/user/logout" target="_parent">logout</a>  
-	           <%
-	          	}
-	           %>
+	          -->
+	          logout
+	          </c:if>
+	           
 	          </td>
 	        </tr>
 	    </table>
