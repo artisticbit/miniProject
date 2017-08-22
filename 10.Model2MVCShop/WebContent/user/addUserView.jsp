@@ -183,7 +183,7 @@
 	</script>
 	
 	<script type="text/javascript">
-	
+	/*
 	 function jsonTest(userId){
 			//alert(userId.value);
 			var varUserId=userId.value;
@@ -211,6 +211,38 @@
 		    }
 			    	    	
 		};
+	*/
+		$(function(){
+			
+			
+			$("input[name='userId']").on("keyup",function(){
+				var userId=$(this).val();
+				//alert(userId);
+				
+				$.ajax({
+						url: "/user/json/checkDuplication/"+userId,
+					//	url: "/user/json/checkDuplication/"+encodeURIComponent(userId),
+						method:"GET",
+						datatype:"json",
+						contentType: "application/x-www-form-urlencoded; charset=ISO-8859-1",
+						success:function(jsonData,status){
+							
+							//alert(jsonData);
+							if(jsonData==true){
+								$("#dupl").text("가입가능한 아이디 입니다.").css("color","black");
+							}
+							else{
+								$("#dupl").text("가입 불가능한 아이디 입니다.").css("color","red");
+							}
+							
+						}
+						
+					})
+				
+			 
+			})
+		});
+		
 	
 	</script>		
 
@@ -259,7 +291,7 @@
 										style="width:100px; height:19px"  maxLength="20">
 					 -->
 						<input 	type="text" name="userId" class="ct_input_bg" 
-										style="width:100px; height:19px"  maxLength="20" onkeyup="jsonTest(this)">
+										style="width:100px; height:19px"  maxLength="20" >
 					</td>
 					<td>
 						<table border="0" cellspacing="0" cellpadding="0">

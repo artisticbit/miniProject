@@ -26,6 +26,14 @@
 		VALUES	 (	#{userId} , #{userName} , #{password} , 'user' , #{ssn:VARCHAR} , 
 							#{phone:VARCHAR} , #{addr:VARCHAR} , #{email:VARCHAR} , SYSDATE )
 	 </insert>
+	 <!--   유저 목록만  -->
+	 <select id="getUserIds" parameterType="string" resultType="string">
+	 	SELECT
+	 	user_id
+	 	FROM users
+	 	WHERE user_id LIKE '%${value}%'
+	 
+	 </select>
 	 
 	 <!-- SQL : SELECT ONE -->
 	 <select 	id="getUser"	parameterType="string"	resultMap="userSelectMap">

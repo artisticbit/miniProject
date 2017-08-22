@@ -1,42 +1,26 @@
-<%@ page contentType="text/html; charset=euc-kr" %>
+<%@ page contentType="text/html; charset=EUC-KR" %>
+<%@ page pageEncoding="EUC-KR"%>
 
+<!DOCTYPE html>
 <html>
+
 <head>
-<title>로그인 화면</title>
-
-<link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+	<meta charset="EUC-KR">
+	
+	<title>로그인 화면</title>
+	
+	<link rel="stylesheet" href="/css/admin.css" type="text/css">
+	
+	<!-- CDN(Content Delivery Network) 호스트 사용 -->
 	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript">
 	   
-		/*=============jQuery 변경 주석처리 =============
-		function fncLogin() {
-			var id=document.loginForm.userId.value;
-			var pw=document.loginForm.password.value;
-			
-			if(id == null || id.length <1) {
-				alert('ID 를 입력하지 않으셨습니다.');
-				document.loginForm.userId.focus();
-				return;
-			}
-			
-			if(pw == null || pw.length <1) {
-				alert('패스워드를 입력하지 않으셨습니다.');
-				document.loginForm.password.focus();
-				return;
-			}
-		}
-		
-		//Call Back Method 이용 onload 시 Event 처리
-		window.onload = function(){
-			document.getElementById("userId").focus();
-		}========================================	*/
 		$( function() {
 			
 			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 			$("#userId").focus();
 			
-			//==> 추가된부분 : "Login"  Event 연결
+			//==>"Login"  Event 연결
 			$("img[src='/images/btn_login.gif']").on("click" , function() {
 
 				var id=$("input:text").val();
@@ -54,18 +38,58 @@
 					return;
 				}
 				
-				//$("form").attr("method" , "POST");
-				//$("form").attr("action" , "/login.do");
-				//$("form").attr("target" , "_parent");
-			    //$("form").submit();
-				//==> 위의 4실행문과 같은의미			    
-				$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
-				
+				////////////////////////////////////////////////// 추가 , 변경된 부분 ////////////////////////////////////////////////////////////
+				//$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				$.ajax( 
+						{
+							url : "/user/json/login",
+							method : "POST" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							data : JSON.stringify({
+								userId : id,
+								password : pw
+							}),
+							success : function(JSONData , status) {
+
+								//Debug...
+								//alert(status);
+								//alert("JSONData : \n"+JSONData);
+								//alert( "JSON.stringify(JSONData) : \n"+JSON.stringify(JSONData) );
+								//alert( JSONData != null );
+							//	alert(JSONData);
+								if( JSONData != null ){
+									//[방법1]
+									$(window.parent.document.location).attr("href","/index.jsp");
+									
+									//[방법2]
+									//window.parent.document.location.reload();
+									
+									//[방법3]
+									//$(window.parent.frames["topFrame"].document.location).attr("href","/layout/top.jsp");
+									//$(window.parent.frames["leftFrame"].document.location).attr("href","/layout/left.jsp");
+									//$(window.parent.frames["rightFrame"].document.location).attr("href","/user/getUser?userId="+JSONData.userId);
+									
+									//==> 방법 1 , 2 , 3 결과 학인
+								}else{
+									alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
+								}
+							},
+							error:function(jqXHR,status,errorThrown){
+								alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
+							}
+					}); 
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						
 			});
 		});
 		
 		
-		//*=============jQuery 추가된부부분 : 회원원가입화면이동 =============
+		//============= 회원원가입화면이동 =============
 		$( function() {
 			//==> 추가된부분 : "addUser"  Event 연결
 			$("img[src='/images/btn_add.gif']").on("click" , function() {
@@ -73,18 +97,15 @@
 			});
 		});
 		
-	</script>	
-
+	</script>		
+	
 </head>
 
 <body bgcolor="#ffffff" text="#000000" >
 
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-<form name="loginForm"  method="post" action="/login.do" target="_parent">
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--> 
- <form name="loginForm"  method="post" action="/user/login" target="_parent">
- 
-<div align="center">
+<form>
+
+<div align="center" >
 
 <TABLE WITH="100%" HEIGHT="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0">
 <TR>
@@ -123,7 +144,7 @@
                 	<img src="/images/text_id.gif" width="100" height="30"/>
                 </td>
                 <td height="30">
-                  <input 	type="text" name="userId"  class="ct_input_g" 
+                  <input 	type="text" name="userId"  id="userId"  class="ct_input_g" 
                   				style="width:180px; height:19px"  maxLength='50'/>          
           		</td>
                 <td width="20" height="30">&nbsp;</td>
@@ -146,26 +167,11 @@
    				    <table width="136" height="20" border="0" cellpadding="0" cellspacing="0">
                        <tr> 
                          <td width="56">
-                         	<!--  
-                         	<a href="javascript:fncLogin();">
                          		<img src="/images/btn_login.gif" width="56" height="20" border="0"/>
-                         	</a>
-                         	-->
-                         	<img src="/images/btn_login.gif" width="56" height="20" border="0"/>
                          </td>
                          <td width="10">&nbsp;</td>
                          <td width="70">
-                         	<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                         	<a href="addUserView.jsp;">
-                         		<img src="/images/btn_add.gif" width="70" height="20" border="0">
-                         	</a>
-                         	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-                         	<!--  
-                         	<a href="/user/addUser">
-                         		<img src="/images/btn_add.gif" width="70" height="20" border="0">
-                         	</a>
-                         	-->
-                         	<img src="/images/btn_add.gif" width="70" height="20" border="0">
+                       			<img src="/images/btn_add.gif" width="70" height="20" border="0">
                          </td>
                        </tr>
                      </table>
@@ -188,4 +194,5 @@
 </form>
 
 </body>
+
 </html>

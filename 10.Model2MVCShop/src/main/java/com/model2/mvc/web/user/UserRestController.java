@@ -1,8 +1,10 @@
 package com.model2.mvc.web.user;
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.osgi.framework.SynchronousBundleListener;
@@ -34,7 +36,17 @@ public class UserRestController {
 	public boolean checkDuplication(@PathVariable String value) throws Exception {
 	 // public boolean checkDuplication() throws Exception {
 		System.out.println("jsonTest!!!!!!!!!!!!!!!!!!!");
-		System.out.println(value);
+		System.out.println("pathvariable : "+value);
+		String test=new String(value.getBytes("8859_1"),"EUC-KR");
+		String test2=URLDecoder.decode((URLDecoder.decode(value, "8859_1")), "EUC-KR");
+		String test3=new String(value.getBytes("8859_1"), "UTF-8");
+		String test4=new String(value.getBytes("8859_1"));
+		System.out.println("double decode : "+test2);
+		System.out.println("double decode 2 : "+test3);
+		System.out.println("test  :" +test);
+		System.out.println("test 4 :" +test4);
+		System.out.println("8859_1 :"+test);
+		System.out.println("urledcoder : "+URLDecoder.decode(value));
 		boolean isDup;
 		isDup=userService.checkDuplication(value);
 		
@@ -83,11 +95,17 @@ public class UserRestController {
 		System.out.println("::"+user);
 		User dbUser=userService.getUser(user.getUserId());
 		
-		if( user.getPassword().equals(dbUser.getPassword())){
+		if(dbUser!=null) {
+			if( user.getPassword().equals(dbUser.getPassword())){
 			session.setAttribute("user", dbUser);
+			}
 		}
-		
 		return dbUser;
 	}
-	
+	///////유저 아이디 목록 
+	@RequestMapping(value="json/getUserIds/{userId}")
+	public List getUserIds(@PathVariable String userId) throws Exception {
+		
+		return	userService.getUserIds(userId);
+	}
 }

@@ -63,4 +63,13 @@ public class UserServiceImpl implements UserService{
 		}
 		return result;
 	}
+
+	@Override
+	public List getUserIds(String userId) throws Exception {
+		
+		return userDao.getUserIds(userId); 
+	}
+	
+	
+	
 }

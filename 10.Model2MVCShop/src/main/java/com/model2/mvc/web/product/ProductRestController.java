@@ -84,6 +84,7 @@ public class ProductRestController {
 	public Map getProductList(@RequestBody Search search ) throws Exception{
 		//System.out.println(prodNo);
 		//Product returnProduct=productService.getProduct(prodNo);
+		System.out.println(search);
 		
 		Map map=productService.getProductList(search);
 		

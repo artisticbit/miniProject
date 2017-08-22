@@ -12,8 +12,11 @@
 <c:if test="${ param.menu=='manage' }">
 <title>상품 관리</title>
 </c:if>
+ 	 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+ 	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+ 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script type="text/javascript">
 	
 		function fncGetProductList(currentPage){
@@ -66,8 +69,34 @@
 				if(text!=''){
 					$(this).css("color" , "red");
 				}
+				
+				
+				$(this).attr("title","").tooltip({
+					//content:"<img src='/images/uploadFiles/aaa.jpg'/>"
+					content:function(){
+						
+						var fileName="";
+						
+						$.ajax({
+							url:"/product/json/getProduct/10047",
+							method:"GET",
+							datatype:"json",
+							async:false,
+							success:function(jsonData,status){
+								fileName=jsonData.fileName;
+								//alert(JSON.stringify(jsonData));
+							//	alert("1:"+fileName);
+								
+							}
+							
+						})
+					//	alert("2:"+fileName);
+						return "<img src='/images/uploadFiles/"+fileName+"' />";
+					}
+				});
 				//alert($(elem).text());
 			});
+			
 			
 			var test=$('');
 			
@@ -77,7 +106,7 @@
 			$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
 			
 			
-			console.log ( $(".ct_list_pop:nth-child(4)" ).html() );
+		//	console.log ( $(".ct_list_pop:nth-child(4)" ).html() );
 		
 		});	
 		 
@@ -94,6 +123,28 @@
 				con2.innerHTML="";
 			}
 		};
+		
+		$(function(){
+			$('#jsonTest').on('click',function(){
+				$.ajax({
+					url:"/product/json/listProduct",
+					method:"POST",
+					datatype:"json",
+					headers : {
+						"Accept" : "application/json",
+						"Content-Type" : "application/json"
+					},
+					data:JSON.stringify({	
+						searchKeyword:"가"
+					})
+					
+				})
+				
+				
+			})
+			
+		});
+	
 	</script>
 </head>
 
@@ -140,7 +191,7 @@
 				<option value="2" ${!empty search && search.searchCondition=='2'? "selected" : ""}>상품가격</option>
 			</select>
 			<input type="text" name="searchKeyword" class="ct_input_g" style="width:200px; height:19px"
-					value="${!empty search.searchKeyword ? search.searchKeyword: ""}"/>
+					value="${!empty search.searchKeyword ? search.searchKeyword: ""}" />
 			<span id="con2">
 			<c:if test="${search.searchCondition=='2' }">
 			<input type='text' name='searchKeyword2' size='3' class='ct_input_g' style='width:200px; height:19px' 
@@ -164,6 +215,9 @@
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
+					</td>
+					<td>
+						<button id="jsonTest" type="button" >test</button>
 					</td>
 				</tr>
 			</table>
@@ -214,8 +268,7 @@
 				<!-- 
 				<a href="/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}">${ prod.prodName }</a>
 				 -->
-				 <span class="hidden_link" >/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}</span>
-				 
+				 <span class="hidden_link" >/product/getProduct?prodNo=${ prod.prodNo }&menu=${param.menu}</span>			
 				 ${ prod.prodName }
 				</td>
 						</c:when>
